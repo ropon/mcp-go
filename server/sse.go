@@ -203,7 +203,13 @@ func (s *SSEServer) handleSSE(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessionID := uuid.New().String()
+	//sessionID := uuid.New().String()
+	//mcphubs inject sessionId
+	sessionID, ok := r.Context().Value("sessionId").(string)
+	if !ok || sessionID == "" {
+		sessionID = uuid.New().String()
+	}
+
 	session := &sseSession{
 		writer:              w,
 		flusher:             flusher,
